@@ -1,17 +1,56 @@
+import {useState} from 'react';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import {users} from './userData';
+import User from './components/User';
+import AddUserFrom from './components/AddUserForm';
+import Navbar from './components/Navbar';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+function Userlist(){
+ 
+const [ list, setUsers] = useState(users);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const addUser= (newUser)=>{
+    setUsers([...list, newUser]);
+     
+}
+
+const deleteUser= (id)=>{
+    setUsers(list.filter((user)=>user.id !=id));
+}
+
+    return(
+
+
+        <Router>
+			<Navbar/>
+
+			<Switch>
+
+			<Route path='/add'>
+					<AddUserFrom addUser={addUser}/> 
+			</Route>
+
+			<Route path='/userlist'>
+				<>
+						{
+							  list.map((user, index)=>{
+								return <User key={index} {...user} deleteUser={deleteUser}/>;
+							})
+						}
+				</>		
+			</Route>
+
+			</Switch>
+		</Router>
+
+
+
+        
+        
+    );
+}
+
+ReactDOM.render( <Userlist/>,document.getElementById('root')) // rendeer userlist which has more user
